@@ -1,0 +1,61 @@
+```{r}
+80 + 20 + 527 + 10 + 1500 + 83
+phone <- 80
+rent <- 1500
+transportation <- 20
+groceries <- 527
+gym <- 10
+other <- 83
+#expenses
+##total expenses
+total_expenses <- 80 + 20 + 527 + 10 + 1500 + 83
+total_expenses
+#semester expenses
+semester <- 5
+semester_expenses <- total_expenses*semester
+semester_expenses
+#year expenses
+year <- 10
+year_expenses <- total_expenses*year
+year_expenses
+abs(-4)
+sqrt(9)
+log(2)
+# My vector expenses
+expenses<-c(phone,transportation,groceries,gym,rent,other)
+barplot(expenses)
+barplot(expenses,names.arg=c("phone","transportation","groceries","gym","rent","other"))
+# finding the hypothenus of a right triangle
+a <- 3
+b <- 4
+hypothenus <- sqrt(a^2+b^2)
+hypothenus
+# probability of getting 2 heads of fair coin tossed 5 times
+n <- 5
+k <- 2
+p <- 1/2
+choose(n,k)
+#binomial formnula using factorial
+(factorial(5)/factorial(2))*(1/2)^5
+#using choose
+choose(n,k)*(1/2)^5
+#fair die 10 times. what the prop of exactly getting 3 sixes?
+choose(10,3)*(1/6)^10
+#using stat::binomial
+??binomial
+dbinom(2,5,(1/2))
+dbinom(2,5,.35)
+dbinom(4,5,.35)+dbinom(5,5,.35)
+#install.packages(c("stringr", "RColorBrewer","XML"))
+library("stringr")
+library("RColorBrewer")
+library("XML")
+#calculate after downloding packages
+x <- 2
+3*x^2 +4*x +8
+x <- -3:3
+3*x^2 +4*x +8
+#I've done the work durin lab, but I had to re-do it because it was pretty messy and I didn't know I have to submitted.
+##Also, I believe I had problems downloding the packages, so when press "knit" it gives an erro. I'm working on investigating how to do it right. I still find kind of difficult following the tutorials. For know, I'll make the downloding part as a comment to debug.
+```
+

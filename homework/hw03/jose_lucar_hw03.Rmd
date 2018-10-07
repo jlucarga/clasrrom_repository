@@ -1,0 +1,38 @@
+---
+title: "hw03-Jose-Lucar-last.Rmd"
+author: "Jose Lucar"
+date: "3/22/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE, fig.path = 'images/')
+```
+
+## R Markdown
+
+2) Pipelines and redirection 
+
+2.1
+```{bash}
+cut -d "," -f 2 data/nba2017-roster.csv | tail +2 | sort -u >team-names.txt
+head -n 5 team-names.txt
+
+```
+```{bash}
+cut -d "," -f 3 data/nba2017-roster.csv | tail +2 | sort -u
+>position-names.txt
+head -n 5 position-names.text
+```
+```{bash}
+cut -d "," -f 7 data/nba2017-roster.csv | tail +2 | sort -n | uniq -c   > experience-count.txt
+head -n 5 experience-count.txt
+```
+```{bash}
+
+```
+
+
+
+
+

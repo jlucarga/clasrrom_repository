@@ -1,0 +1,233 @@
+---
+title: "warmup03-Jose-lucar.Rmd"
+author: "Jose Lucar"
+date: "9/19/2018"
+output: html_document
+---
+
+## Reading the Data Into R
+
+
+- Do data have a header containing the variable names?
+
+    - No, or I don't know if its hidden. All I see is a list of strings. I guess if I use the function 'names(<the name of the data>)' I will get the names inside of the data like price, rooms, bedrooms. Or if I use the function colnames(<name of the data>)
+
+- Are the values for an observation separated by a comma, blank or tab?
+
+    - Yes, they are separated by tabs.
+
+- Read the documentation for read.table() and examine the parameters that are used
+to specify whether the data have a header and how the values in a row are separated
+
+    - The parameters for **read.table()** consist in pasteO to converts its arguments to string; the names github and repo are seprated by a comma and the have the paths do where the data is. They use the command sep= "\t" but they already used pasteO so its a bit confusing. sep = "\t" means tab.
+
+- Without looking at the code below, try to write a command to import the data in R. If
+you can’t do this, then use the commands shown below.
+
+    - github <- 'https://github.com/ucb-stat133/stat133-fall-2018/'
+      repo <- 'raw/master/data/saratoga.txt'
+      house <- read.table(paste0(github, repo), sep = "\t")
+      
+- After you imported the data, use str() to get a report of the dimensions of the data
+frame, as well as the class of each column.
+    
+```{r}
+github <- 'https://github.com/ucb-stat133/stat133-fall-2018/'
+repo <- 'raw/master/data/saratoga.txt'
+house <- read.table(paste0(github, repo), sep = "\t", header = TRUE)
+
+house
+str(house)
+```
+    - All columns are Factors; however, if we add header = T in house, we can see all header's names such as price. If we analized this new header's names using str, we will get the classes for the new headers as integers and numeric values. 
+    
+```{r}
+house <- read.table(paste0(github, repo), sep = "\t", header= TRUE)
+
+summary(house$Price)
+housing_price<- house$Price
+
+hist(housing_price, breaks = 30)
+```
+
+
+```{r}
+
+hist(log(house$Price), breaks = 30)
+```
+
+- How many houses are what we call cheap?
+    - 5 houses are what we call cheap.
+
+```{r}
+
+cheap<-log(house$Price)
+cheap[cheap<10.5]
+cheap<-c(cheap[cheap<10.5])
+cheap
+```
+  
+-   Use logical subsetting to print the values of all of the variables for the cheap houses
+
+```{r}
+total_cheap_houses<- length(cheap)
+total_cheap_houses
+
+```
+
+
+
+- Use the variable cheap to (logically) subset the data frame house and remove these rows
+from the data frame. Call the new data frame house; that is, replace the existing data frame
+with the new one.
+
+```{r}
+house<- house[!(log(house$Price) %in% cheap),]
+
+log(house$Price)
+```
+
+###Living Area
+
+- Next we explore the size of the house, i.e., the living area. Do you find a similar issue with
+the living area? Examine the summary statistics for living area and make a histogram of the
+values for living area and another histogram for the logarithm of these values.
+We again find that the distirbution is skewed to the right. The log transformation of the
+values has a less peaked distribution that is roughly symmetric, but there appears to be an
+
+```{r}
+
+length(house$Living.Area)
+summary(house$Living.Area)
+
+hist(house$Living.Area)
+hist(log(house$Living.Area), breaks = 30)
+
+```
+
+**unusually large number of values at about 6.8. What value does this correspond to in the
+original units of measurement?**
+```{r}
+exp(6.8)
+
+```
+
+### Transforming Variable into Factors
+
+
+- We next transform the number of bedrooms into a factor vector, i.e., into a categorical
+variable. We want to collapse the number of bedrooms into four categories, 2 or fewer, 3, 4,
+and 5 or more.
+To do this, follow the following approach:
+    - Assign the variable Bedrooms in house to a vector called BR.     - Use subsetting to set all of the values in BR that are greater than 5 to 5.
+    -  Use the same approach to set all of values in BR that are under 2 to 2.
+    - Use the factor() function to convert BR to a factor vector. - Read carefully about the levels and labels parameters to the function. For the categories, use the following
+strings: “2- BR”, “3 BR”, “4 BR”, and “5+ BR”. Assign the factor to BR, i.e., over
+- write the numeric BR with the factor BR. It will be helpful to use the “:” function and
+the c() function to create the arguments to the function call
+```{r}
+house
+BR <- house$Bedrooms
+BR[BR>5]<-5
+BR[BR<2]<-2
+
+BR<- factor(BR, labels= c('2- BR', '3 BR', '4 BR', '5+ BR'))
+
+```
+
+
+- How does a summary of BR look different than a summary of Bedrooms?
+
+```{r}
+summary(BR)
+summary(house$Bedrooms)
+
+```
+
+    - Summary of _BR_ will return the count of each category
+    - Summary of _Bedrooms_ will return the stadistics of the number of bedrooms
+
+### Plotting Price against Living Area
+
+- We will now make a plot of price against living area (both on the log scale) and color the
+plotting symbols according to the number of bedrooms in the house. We will use the new
+vector BR to determine the color.
+
+- Begin by making a vector of 3 colors. Use the colors called aquamarine3, darkgoldenrod2,
+coral2, and mediumorchid3, in that order. Call this vector, my_colors.
+
+```{r}
+my_colors <- c('aquamarine3', 'darkgoldenrod2','coral2', 'mediumorchid3')
+```
+
+- Next make vector of colors that matches the length of BR, and where a value is “2- BR”,
+the color is aquamarine3, where a value is “3 BR”, the color is darkgoldenrod2, etc. Use
+subsetting by position of the vector my_colors to do this. Call this new vector, br_colors.
+
+```{r}
+BR
+my_colors
+br_colors<- factor(BR, labels = my_colors)
+```
+
+- Lastly, we make the scatterplot as follows. Once you have created all of the necessary variables, i.e., BR, br_colors and my_colors
+
+```{r}
+
+plot( Price ~ Living.Area, data = house, log = "xy", main = "",
+xlab = "Living Area (log sq ft)", ylab = "Price (log $)",
+col = br_colors, pch = 19, cex = 0.4)
+
+legend("bottomright", fill = my_colors, legend = levels(BR), title = "# Bedrooms", cex = 0.75)
+
+
+
+```
+## Number of Fireplaces
+
+
+- The original variable Fireplaces is the actual number of fireplaces in the house. Follow the
+approach in the previous section to create a new variable called FP that is a factor with just
+two levels: "None","At least 1"
+
+```{r}
+FP<-house$Fireplaces
+
+FP[FP>0]<-"At least 1"
+FP[FP==0]<-"None"
+FP<- factor(FP, labels= c('At least 1', 'None'))
+```
+
+- Create a new variable that contains the price per square foot of the house. Make a plot of
+price per square foot against price (determine if they should be on the log scale) and color
+the plotting symbols according to whether or not there is a fireplace in the house. To do this,
+create a vector of colors called fp_colors.
+
+```{r}
+fp_col<- c('red', 'blue')
+fp_colors<- factor(FP, labels = fp_col) 
+
+
+price_per_sqft<-((house$Price)/(house$Lot.Size*(43560)))
+price_per_sqft
+
+options(scipen = 999)
+
+plot(log(house$Price) ~ log(price_per_sqft), data = house, main = "Price per sqf Against Price",xlab = "Price sqft(log$)", ylab = "Price (log$)",
+col = fp_colors , pch = 19, cex = 0.4)
+
+
+legend("bottomright", fill = fp_colors, legend = levels(FP), title = "Fireplace", cex = 0.50)
+
+```
+
+
+- Are houses with fireplaces generally more expensive than houses without? 
+
+    - Yes, the color black dots indicate that houses with fireplaces are generally more expensive when we calculate both the log price and the log price per square foot.
+
+- What is the
+relationship between price per square foot and price? Can you explain why you might have
+this shape of relationship?
+
+    - Houses can vary in price due to its sizes, so if we want to know if houses with fireplaces are generally more expensive, we need to look at both price and price per square foot. This will allous to understand if a house is more expensive because its just bigger or there is some other feature that the house has. In this case, the feature can be the fireplace. Of course, this is doesn't simple solve the problem because houses posses many things that can change its price such as location, pool, etc. 

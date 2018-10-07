@@ -1,0 +1,366 @@
+---
+title: "Warmup02-Jose-Lucar.Rmd"
+author: "Jose Lucar"
+date: "9/13/2018"
+output: html_document
+---
+```{r}
+
+github <-'https://github.com/ucb-stat133/stat133-fall-2018/' 
+repo <-'raw/master/data/tents.RData'
+download.file(
+url = paste0(github, repo),
+destfile = "tents.RData")
+load("tents.RData")
+```
+
+
+## classes
+```{r}
+
+ls()
+class(bestuse)
+class(brand)
+class(capacity)
+class(github)
+class(height)
+class(price)
+class(repo)
+class(season)
+class(tent)
+class(weight)
+```
+
+## Is Vector
+```{r}
+is.vector(bestuse)
+is.vector(brand)
+is.vector(capacity)
+is.vector(github)
+is.vector(height)
+is.vector(price)
+is.vector(repo)
+is.vector(season)
+is.vector(tent)
+is.vector(weight)
+```
+
+## Is Factor
+```{r}
+
+is.factor(bestuse)
+is.factor(brand)
+is.factor(capacity)
+is.factor(github)
+is.factor(height)
+is.factor(price)
+is.factor(repo)
+is.factor(season)
+is.factor(tent)
+is.factor(weight)
+
+typeof(bestuse)
+typeof(brand)
+typeof(capacity)
+typeof(github)
+typeof(height)
+typeof(price)
+typeof(repo)
+typeof(season)
+typeof(tent)
+typeof(weight)
+```
+ 
+## Mode
+
+```{r}
+mode(bestuse)
+mode(brand)
+mode(capacity)
+mode(github)
+mode(height)
+mode(price)
+mode(repo)
+mode(season)
+mode(tent)
+mode(weight)
+```
+
+## Length
+
+```{r}
+length(bestuse)
+length(brand)
+length(capacity)
+length(github)
+length(height)
+length(price)
+length(repo)
+length(season)
+length(tent)
+length(weight)
+```
+
+## Sring
+```{r}
+
+str(tent)
+str(bestuse)
+str(brand)
+str(capacity)
+str(github)
+str(height)
+str(price)
+str(repo)
+str(season)
+str(tent)
+str(weight)
+```
+## extracting the fisrt fice labels
+
+```{r}
+head(tent,n=5)
+head(bestuse,n=5)
+head(brand,n=5)
+head(capacity,n=5)
+head(github,n=5)
+head(height,n=5)
+head(price,n=5)
+head(repo,n=5)
+head(season,n=5)
+head(tent,n=5)
+head(weight,n=5)
+
+head(tent,n=3)
+```
+
+## Plots, Bars, Xlim, Ylim, Stats...
+
+```{r}
+
+
+summary(price)
+
+sd(price)
+mean(price)
+min(price)
+max(price)
+median(price)
+quantile(price)
+hist(price)
+boxplot(price)
+density(price)
+
+plot(density(price))
+plot(density(height))
+plot(density(weight))
+
+# The plot density grapgh has a bell shaped skewed. 
+
+sd(height)
+#the center or the mean is greater than the median because it has a right hand tail.
+
+boxplot(height)
+mean(height)
+min(height)
+max(height)  
+sd(height)
+median(height)
+
+bestuse
+factor(bestuse)
+table(bestuse)
+table(frequency(bestuse))
+
+table(bestuse)
+bestuse_fac<- factor(bestuse)
+table(bestuse_fac)
+bestuse_fac[1:5]
+bestuse_fac
+table(bestuse_fac)[1]/length(bestuse_fac)
+table(bestuse_fac)[2]/length(bestuse_fac)
+table(bestuse_fac)[3]/length(bestuse_fac)
+
+relative_freq_bestuse_fact <-(table(bestuse_fac)[1:3]/length(bestuse_fac)*100)
+relative_freq_bestuse_fact
+
+barplot((relative_freq_bestuse_fact)/100)
+
+# 2) Scatter Plot
+
+head(height)
+height
+head(price)
+relation_h_p<-plot(height,price)
+
+x<-height 
+y<-price
+plot.new()
+plot.window(xlim= c(0,250),ylim=c(0,700))
+axis(1, col.axis= "blue")
+axis(2, col.axis="red" , las= 1)
+title( main= "height & price")
+points(x, y)
+```
+
+
+```{r}
+
+# A vector hight_vec
+height
+height_vec <-c(height)
+
+
+# the lenght of the vector hight_vec
+length(height_vec)
+
+# length of height
+len_height<-c(length(height))
+len_height
+
+
+# the mean for height
+x_mean_height=(sum(height)/len_height)
+x_mean_height
+
+
+#length of price
+n_price<-c(length(price))
+n_price
+
+#mean of height
+x_mean_height=(sum(height)/len_height)
+x_mean_height
+
+#mean of price:
+y_mean_price=(sum(price)/n_price)
+y_mean_price
+
+#Variance of height:
+
+variance=(sum((height-x_mean_height)^2))/ (len_height)
+variance
+
+## Using the built-in formula for variance gives an slightly different result than calculating it automatically. 
+
+var(height)
+
+#standard deviation of height: 
+
+(variance)^(1/2)
+
+```
+
+
+## More Manipulation:
+
+### how many tents have a price less than or equal to $300
+```{r}
+weight_lbs<-c((weight)* .0022)
+
+height_in<-c((height)*0.393701)
+
+```
+### how many tents have a price less than or equal to $300
+
+```{r}
+price_equal_less_300 <- length(price[price>=300])
+
+price_equal_less_300
+
+
+```
+
+### how many tents have a price between $300 and $400 (including both $300 and $400 prices)
+
+```{r}
+
+price_btw_300_400 <- length((price[(price<=400)|(price>=300)]))
+price_btw_300_400
+```
+ 
+###  what’s the name of the tent with maximum price
+
+```{r}
+
+tent[which.max(price)]
+
+```
+### how many tents have a price > $400 AND weight < 1500 grams
+
+
+```{r}
+tent[(price>400) & (weight < 1500)]
+
+```
+### calculate the 90th percentile for height and assign it to the object height_p90 (display this value)
+
+``` {r}
+height_p90 <- quantile(height, c(.90))
+height_p90
+quantile(height, probs = .9)
+
+```
+### calculate the 90th percentile for weight and assign it to the object weight_p90 (display this value)
+
+```{r}
+weight_p90 <- quantile(weight, c(.90))
+weight_p90
+
+```
+### display the name of the tents with height > height_p90 AND weight > weight_p90
+
+```{r}
+last_10_percentile=tent[(height > height_p90) & (weight > weight_p90)]
+
+last_10_percentile
+
+```
+
+intervals  | labels
+---------------|--------
+     (0, 1000] |  1kg
+  (1000, 2000] |  2kg
+  (2000, 3000] |  3kg
+  (3000, 4000] |  4kg
+  (4000, 5000] |  5kg
+  (5000, 6000] |  6kg
+  (6000, 7000] |  7kg
+  (7000, 8000] |  8kg
+  (8000, 9000] |  9kg
+
+
+
+```{r}
+weight
+
+weight_factor <- factor(weight)
+weight_factor
+str(weight_factor)
+
+season_factor <- factor(season)
+season_factor
+str(season_factor)
+is.ordered(season_factor)
+
+```
+Without any doubt 'working with factor' was the most difficult part of all the warmups. I will try to get support from GSI next lab.I even have to delete a lot of my work on this because I wasn't able to knit it.
+
+
+### Coments and Reflections:
+
+- I think remember how to make vector with different features were hard because there are many ways to create vector with specific type of data.
+
+- I don't think anything was really easy, but it was interesting to have a link to help us make the graphs
+
+- Again, I needed help to complete the assigment and it was basically the same friend that helped with the first warm-up. This person doesn't know almost nothing about r like me, but we had two laptos on and a lot of enthusiasm to find how to solve each question. 
+
+- The most time consuming part was the figuering out how to do the boxplot with ** _title_, _axis_ and _points_ **
+
+- I did not understand too much the link because averything in there is new for me, but the more time I spend reading it again and again, the more I get.
+
+- The super most frustraiting thing was trying to rememver what covariance was. I couldn't do it because I couldn't fully understand it. we basically skipped this part, I believe, in my ** Stat 20 ** class from _last year_
+
+
+
+

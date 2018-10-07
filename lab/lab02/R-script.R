@@ -1,0 +1,232 @@
+title: "lab02-Jose-Lucar"
+author: "Jose Lucar"
+date: "9/8/2018"
+output: rscript
+
+
+#class(experience)
+#typeof()  type of storage of any object
+
+#str() displays the structure of an object in a compact way
+
+#mode() gives the data type (as used in R)
+
+#object.size() gives an estimate of the memory space used by an object
+
+#length() gives the length (i.e. number of elements)
+
+#head() take a peek at the first elements
+
+#tail() take a peek at the last elements
+
+#summary() shows a summary of a given object
+
+length(player)
+length(team)
+length(position)
+length(salary)
+#Does all the objects has the same length?
+#Yes, all the objects has the same length!
+
+head(player)
+head(team)
+head(position)
+head(salary)
+
+#Are there missing values like NA?
+#No, that I can see from this four values
+
+tail(player)
+tail(team)
+tail(position)
+tail(salary)
+
+
+
+#how do you know if any of the loaded objects s a vector?
+#using is.vector()
+
+typeof(player)
+typeof(team)
+typeof(position)
+typeof(salary)
+typeof(age)
+typeof(points1)
+typeof(points)
+typeof(points2)
+typeof(rdata)
+typeof(points3)
+typeof(experience)
+
+summary(player)
+summary(team)
+summary(position)
+summary(salary)
+summary(age)
+summary(points1)
+summary(points)
+summary(points2)
+summary(rdata)
+summary(points3)
+summary(experience)
+
+
+is.vector(player)
+is.vector(team)
+is.vector(position)
+is.vector(salary)
+is.vector(age)
+is.vector(points1)
+is.vector(points)
+is.vector(points2)
+is.vector(rdata)
+is.vector(points3)
+is.vector(experience)
+
+four<-head(player, n=4)
+four
+
+four[1] #first in the vector
+four[0] #the type of the vector
+four[-2] #the vector, excluding the itrem 2
+four[-c(1,2,3)] # the vector, ecluding the items 1,2,3
+four[5] #because the vectors length is 4, this will give you an error
+
+four[c(1,2,2,3,3,3)] #repeated items in the vector
+
+# third element (four times)
+player[rep(3, 4)]
+
+# Subset the first four players:
+four <- player[1:4]
+four
+
+player[seq(from=2, to = length(player), by=2)] # the even items in player- for odds start at item 1
+
+player[seq(from=10, to = 40, by=10)]#elemnts  10,20,30,40
+
+player[seq(from=5, to = length(player), by=5)] #elements multiples of 5
+
+rev(player[seq(from=2, to = length(player), by=2)]) #even items in rev order
+
+#> greater than
+#>= greater than or equal
+#< less than
+#<= less than or equal
+#== equal
+#!= different
+
+a <- c(2, 4, 6, 7, 8, 10)
+a>6
+
+a!=6
+
+a[a>6]
+a[a!=6]
+
+scored_four <- scored[1:4]
+
+#scored_four[scored_four > 100]
+
+#scored_four[scored_four!=10]
+
+
+
+#TRUE Statements
+
+TRUE & TRUE
+TRUE & FALSE
+FALSE & FALSE
+
+# OR Statements
+
+TRUE | TRUE
+TRUE | FALSE
+FALSE | FALSE
+
+#Not Statements
+
+!TRUE
+!FALSE
+
+player[team == 'GSW'] #all true player elements where team is GSW
+
+player[salary>2000000] #players with salaries greater than 2 m
+
+#player[scored>1000 & points>1200]#players with scores between 1000 and 1200
+
+player[which.max(salary)]#player with the highest salary
+
+player[which.min(salary)]
+salary[which.max(points)]
+#player[which.max(scored)]
+
+player[position== 'C' & team== "GSW"]
+names(player)
+
+player[(position %in% c("SG","PG")) & team== 'LAL']
+player[which.max(points3)]
+#team[which.max(scored)]
+
+warriors_player <- player[team=='GSW']
+warriors_player
+
+warriors_salary <- salary[team=="GSW"]
+warriors_salary
+
+#warriors_points <- scored[team=="GSW"]
+warriors_points
+
+names(warriors_salary) <- warriors_player
+
+warriors_salary['Kevin Durant']
+
+warriors_salary[c("Stephen Curry", "Kevin Durant")]
+
+scored
+salary
+
+plot('scored','salary') #display an error message - run this to read the error message
+#log(scored)
+log(salary)
+
+plot(scored,salary)
+
+log_scored <- log(scored)
+log_salary <- log(salary)
+
+plot(log_scored, log_salary)
+
+plot(log_scored, log_salary)
+text(log_scored, log_salary, labels = abbreviate(player))
+
+
+salary_millions<-c(salary/100000)
+salary_millions
+
+da<- c(points1+points2+points3)
+#da %in%(x,points) 
+
+is.factor(team)
+
+is.factor(position)
+
+class(position)
+
+position_fact<-factor(position)
+position_fact
+position
+
+position_fact[1:5]
+table(position_fact)
+
+position_fact[team=="GSW"]
+
+position_fact[salary_millions>15]
+
+table(position_fact[salary_millions>15])
+#count frequency
+prop.table(table(position))
+prop.table(table(team[position_fact=="SG"]))
+
+load('nba2018-salary-points.RData')

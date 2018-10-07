@@ -1,0 +1,85 @@
+---
+title: "Lab03"
+author: "Jose Lucar"
+date: "15/9/2018"
+output: html_document
+---
+
+```{bash}
+
+#pwd: print working directory
+#ls: list files and directories
+#cd: change directory (move to another directory)
+#mkdir: create a new directory
+#touch: create a new (empty) file
+#cp: copy file(s)
+#mv: rename file(s)
+#rm: delete file(s)
+
+ls
+cd stat133-lab03
+curl -O http://textfiles.com/food/bread.txt
+ls
+curl -O http://textfiles.com/food/btaco.txt
+curl -O http://textfiles.com/food/1st_aid.txt
+curl -O http://textfiles.com/food/beesherb.txt
+ls
+curl -O http://archive.ics.uci.edu/ml/machine-learning-databases/forest-fires/forestfires.csv
+
+curl -O http://www.math.uah.edu/stat/data/Fisher.csv
+curl -O http://web.pdx.edu/~gerbing/data/cars.csv
+
+```
+
+```{bash}
+cd stat133-lab03
+ls -l
+ls -r
+ls -lt #content in long format and by time
+mkdir data1
+ls
+cd data1
+ls
+
+```
+
+```{bash}
+cd stat133-lab03
+cd data1
+mkdir txt-files
+mkdir csv-files
+mv ../bread.txt txt-files
+mv ../*.txt txt-files
+```
+
+
+
+```{bash}
+cd stat133-lab03
+cp data1/txt-files/bread.txt copies
+cp data1/txt-files/*.txt copies
+cp data1/csv-files/*.csv copies
+cd copies
+mv bread.txt bread-recipe.txt
+mv Fisher.csv iris.csv
+mv btaco.txt breakfast-taco.txt
+ls
+cd ..
+ls
+mv copies copy-files
+ls
+
+```
+
+
+
+```{bash}
+
+cd stat133-lab03
+rm -r copy-files
+ls -r data1/txt-files
+
+
+
+```
+

@@ -1,0 +1,16 @@
+---
+title: "Untitled"
+author: "Jose Lucar"
+date: "4/5/2018"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(stringr)
+library(plotly)
+github <- "https://raw.githubusercontent.com/ucb-stat133/stat133-spring-2018/master/"
+datafile <- "data/mobile-food-sf.csv"
+download.file(paste0(github, datafile), destfile = "mobile-food-sf.csv")
+
+```

@@ -1,0 +1,369 @@
+---
+title: "warmup04_Jose_Lucar.Rmd"
+author: "Jose Lucar"
+date: "9/19/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+### Download the Data
+
+```{bash}
+curl -O https://raw.githubusercontent.com/ucb-stat133/stat133-fall-2018/master/data/nba2018.csv
+```
+
+### 1)  Import the Data in R
+
+- **You have to explicitly specify the data-type for each column as follows:**
+    - **the columns player, team, height, birth_date, country, experience, and college have to be declared as type character.**
+    - **the column position has to be declared as a factor with levels 'C', 'PF', 'PG','SF', 'SG'.**
+    - **the columns salary, field_goals_perc, points3_perc, points2_perc, points1_perc,and effective_field_goal_perc have to be declared as type double (or real).**
+    - **the rest of the columns have to be declared as type integer.**
+    - **recall that read_csv() uses the argument col_types to specify data types**
+
+```{r}
+
+library(readr)
+nbaData<-read_csv("nba2018.csv")
+
+nbaData<-read_csv("nba2018.csv",col_names=TRUE, col_types=cols(.default= col_integer(),player=col_character(), team= col_character(), height= col_character(), birth_date= col_character(), country= col_character(), experience= col_character(), college= col_character(), salary = col_double(), field_goals_perc = col_double(), points3_perc = col_double(), points2_perc = col_double(), points1_perc = col_double(), effective_field_goal_perc= col_double(), position = col_factor(levels = c('C', 'PF', 'PG',
+'SF', 'SG')))) 
+
+str(nbaData)
+```
+
+### 2) Right after importing the data
+
+- **Once you have the data in R, do a bit of preprocessing on the columns _salary and experience_ _experience_ should be of type character because of the presence of the R values that indicate _rookie players_ Replace all the occurrences of "R" with 0, and then convert the entire column into _integers_. Display the **summary()** of this column.**
+
+```{r}
+nbaData$experience[nbaData$experience=="R"]<- 0
+nbaData$experience<- as.integer(nbaData$experience)
+summary(nbaData$experience)
+
+```
+
+-  **_salary_ is originally measured in dollars. Transform salary so that you have salaries in millions: e.g. 1000000 should be converted to 1. Display the summary() of this column.**
+
+```{r}
+
+nbaData$salary<- nbaData$salary/100000
+
+```
+
+- **position should be a factor with 5 levels: 'C', 'PF', 'PG', 'SF', 'SG'. Relabel these factors using more descriptive names (see below). Display the frequencies of the relabeled factor with table()**
+
+```{r}
+
+library(plyr)
+nbaData$position<-revalue(nbaData$position, c("C"= "center","PF"="power_fwd","PG"="point_guard","SF"="small_fwd","SG"="shoot_guard"))
+
+nbaData$position
+table(nbaData$position)
+
+```
+
+### 3) A bit of subscripting (i.e. indexing, slicing, subsetting)
+
+- **Use bracket notation, the dollar operator, as well as concepts of logical subsetting and indexing to calculate:**
+
+- **How many players went to UCLA (“University of California, LosAngeles”)?**
+    
+
+```{r}
+rows_ucla<-c(which(nbaData$college=="University of California, Los Angeles"))
+data_ucla<-nbaData[rows_ucla, ]
+nrow(data_ucla)
+```
+
+
+- **How many players went to Cal (“University of California, Berkeley”)?**
+    
+    
+```{r}
+
+rows_ucb<-c(which(nbaData$college=="University of California"))
+nbaData[rows_ucb, ]
+data_berkeley<-nbaData[rows_ucb, ]
+nrow(data_berkeley)
+
+```
+
+- **What’s the largest weight value?**
+    
+    
+```{r}
+max(nbaData$weight)
+
+```
+
+
+- **Who are the players with the largest weight value?**
+    
+    
+```{r}
+which.max(nbaData$weight)
+heavy_player<-nbaData$player[149]
+heavy_player
+```
+  
+  
+-  **What’s the overall average weight?**
+   
+    
+```{r}
+mean(nbaData$weight)
+```
+
+
+- **What is the median salary of all players?**
+    
+    
+```{r}
+
+median(nbaData$salary)
+```
+
+
+- **What is the median salary of the players with 10 years of experience or more?**
+    
+    
+```{r}
+experienced_players <-c(which(nbaData$experience>10))
+data_experienced_players<-nbaData[experienced_players, ]
+median(data_experienced_players$salary)
+```
+
+
+- **What is the median salary of Shooting Guards (SG) and Point Guards (PG)?**
+    
+    
+```{r}
+
+rows_shoot_guard<-c(which(nbaData$position=="shoot_guard"))
+rows_point_guard<-c(which(nbaData$position=="point_guard"))
+rows_shoot_point_guard<- c(rows_shoot_guard,rows_point_guard)
+
+data_guards<-nbaData[rows_shoot_point_guard, ]
+
+median(data_guards$salary)
+```
+
+
+- **What is the median salary of Power Forwards (PF), 30 years or older, weighing 240 pounds or more?**
+    
+
+```{r}
+
+rows_PF<-c(which(nbaData$position=="power_fwd"))
+data_PF<- nbaData[rows_PF, ]
+rows_30plus<-c(which(data_PF$age>29))
+data_PF_30plus<- data_PF[rows_30plus, ]
+rows_heavy_oldy_PF<-c(which(data_PF_30plus$weight>=240))
+data_heavy_oldy_PF<- data_PF_30plus[rows_heavy_oldy_PF, ]
+median(data_heavy_oldy_PF$salary)
+
+```
+
+
+- **Create a data frame gsw with the player name, position, height, weight, and age of Golden State Warriors (GSW). Display this data frame.**
+
+
+```{r}
+GSW_rows <-c(which(nbaData$team=="GSW"))
+GSW_rows
+GSW_data<-nbaData[GSW_rows, ]
+
+gsw<-c("player", "position", "height", "weight", "age")
+small_GSW_data<-GSW_data[ ,gsw]
+
+small_GSW_data
+
+```
+
+### 4) Performance of players
+
+
+- **missed_field_goals (missed field goals)**
+
+
+```{r}
+missed_field_goals <- c(nbaData$field_goals_atts-nbaData$field_goals)
+```
+
+
+- **missed_free_throws (missed free throws)**
+
+
+```{r}
+missed_free_throws<-c(nbaData$points1_atts-nbaData$points1)
+```
+
+
+- **rebounds (total rebounds: offensive and defensive)**
+
+
+```{r}
+rebounds<- c(nbaData$total_rebounds)
+```
+
+
+- **mins_game (minutes per game; NOT to be used when calculating EFF)**
+
+
+```{r}
+mins_game<-c(nbaData$minutes/nbaData$games)
+```
+
+
+- **You will have to compute the efficiency (EFF) for each player.**
+
+
+```{r}
+efficiency<- c((nbaData$points + nbaData$total_rebounds + nbaData$assists + nbaData$steals + nbaData$blocks - missed_field_goals - missed_free_throws - nbaData$turnovers)/nbaData$games)
+
+```
+
+
+- **Once you have all the necessary statistics, add a column efficiency to the data frame using the formula provided above.**
+
+
+```{r}
+nbaData$efficiency<- efficiency
+```
+
+
+- **Compute summary() statistics for efficiency**
+
+
+```{r}
+summary(nbaData$efficiency)
+```
+
+
+- **graph its histogram. Add color to the bars in hte histograms, and make sure it includes descriptive axis labels, as well as a title.**
+
+
+```{r}
+
+colors = c("red", "yellow", "green", "violet", "orange", 
+"blue", "pink", "cyan")
+
+hist(nbaData$efficiency, col = colors, main = "Histogram Efficiency of NBA Players", xlab = "Effciency Statistic Points", ylab ="Effciency Frequency of Points")
+
+```
+
+
+- **Display the player name, team, salary, and efficiency value of the top-10 players by EFF in decreasing order (display this information in a data frame).**
+
+
+```{r}
+
+new_top10_efficiency_data<-head(nbaData[order(-efficiency),], n=10)
+
+new_vec_eff<-c("player", "team", "salary", "efficiency")
+
+new_top<-new_top10_efficiency_data[ ,new_vec_eff]
+
+new_top
+
+```
+
+
+- **Did you find players with a negative EFF? If yes, display their names.**
+
+    - _Yes_ :
+    
+
+```{r}
+rows_neg_eff<-which(nbaData$efficiency<0)
+nbaData$player[rows_neg_eff]
+
+```
+
+  
+### 5) Further Exploration
+
+
+- **The more efficient the player is, the highest his salary**
+
+
+
+```{r}
+new_top
+```
+    - No, neccesarily. For example LeBrom James efficiency score is 30.95946 and his salary is 309.63450 in millions of dollaras and Russell Westbrook efficiency score is 33.82716 and his salary is 265.40100. In other words, LeBrom has lower efficiency score than Russell but LeBrom gets a higher salary. The efficiency is some how correlated with how much players get paid but their salary doesn't depend on their efficiency score. In addition, this efficiency scores are calculated based on the performance of a player at the end of the season, but their salary is usually set in the beggining of the season, so at the end, we can't draw conclusions from any correlation between these two variables. 
+
+
+- **As players get older, do they tend to become more efficient?**
+
+
+```{r}
+age<-nbaData$age
+new_top400_age_data<-head(nbaData[order(-age,-efficiency), ], n=400)
+age_efficiency<-new_top400_age_data[ ,c("age","efficiency")]
+age_efficiency
+
+```
+    - No, there isn't any pattern associated with the age of a player and their age. The only possible correlation we might found is in the oldest players that shows a very poor efficiency scores, _less than 10 for 8 top 10 oldest players_. Again, as we go keep looking into their ages, it doesn't seem that there is any other correlation.
+    
+
+- **Does the rank of a player seem to be associated with his efficiency (i.e. the more importnat the rank, the more efficient)?**
+
+
+```{r}
+rank<- nbaData$rank
+new_top100_rank_data<-head(nbaData[order(-efficiency,rank), ],n=100)
+rank_efficiency<-new_top100_rank_data[ ,c("rank","efficiency")]
+rank_efficiency
+```
+    - Only for the players with the highest efficiency scores, it looks like it shows some association between their rank and their efficiency. for the players with lowest efficiency, it looks like their ranks gets a bit messy, so there isn't a strong association. 
+  
+### 6) Comments and Reflection
+
+- **How much time did it take to complete this HW?**
+
+
+    - It took me around a week and 3 to 4 well dedicated days, days were I will only wake up to do this assigment. In addition, I'm a DSP student, so it usually take me longer than most people to complete assigments and this is why I have turn in late assidgments as one of my accomodations.
+    
+    
+- **What things were hard, even though you saw them in class/lab?**
+
+
+    - Importing data and counting specific values of columns in the data frame. the link for checking out how to import data with declared classes of columns didn't provide enough information, so I had google a lot to learn how to do it. In class with imported data, but I'm not sure how similar it was to what we were asked to do in part 1 of this assigment. Also, since there is many ways in which you can import data, there is a lot of information on how to do it which it doesn't neccesarily make it easier because I was looking for a specific way to do it.
+    
+    
+- **What was easy(-ish) even though we haven’t done it in class/lab?**
+
+
+    - Calculating efficiency of players was the easiest part because it only involves mathematical calculation using data that was easy to acces from the data frame.
+    
+    
+- **Did you need help to complete the assignment? If so, what kind of help?**
+
+
+    - Yes, I have a friend that helps me understand what I'm asked to do. Also, It is always helpful to discuss with someone what is the best way to approach a question to provide a most efficient and clear answer.
+    
+    
+- **What was the most time consuming part?**
+
+
+    - Part one and part 3. Part 1 because I had to research by reading and whatching videos online to learn how to use read_csv with its different arguments and part 3 because it was a bit hard to find information on how to count an specific value of a column inside a dta frame.
+    
+    
+- **Was there anything that you did not understand? or fully grasped?**
+
+
+    - Maybe, I would like to keep practicing more about importing different type of data with different arguments. I know we've been doing a lot since the biggining of the semester, but I would like to continue to get better at it, so ma data can be more manageable since the beggining of my data analysis.
+    
+    
+- **Was there anything frustrating in particular?**
+
+
+    - Part 1 was time consuming, but I was learning a lot by researching the web. However: Part 3 was just to get the right specific code and most things I was finding on my search were things that I knew already or I didn't need it at all. Part 3 was also time consuming as Part 1, but without the fan stuff of learning. I feel that if I knew someone that knows **R**, this would of be the easiest one. 
+
+
+
+
+

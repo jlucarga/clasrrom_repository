@@ -1,0 +1,81 @@
+---
+title: "4lab4"
+author: "Jose Lucar"
+date: "5/2/2018"
+output: html_document
+---
+```{r}
+
+library(readr)
+uci <- 'http://archive.ics.uci.edu/ml/machine-learning-databases/'
+abalone <- 'abalone/abalone.data'
+origin <- paste0(uci, abalone)
+destination <- 'abalone.data'
+download.file(origin, destination)
+
+```
+
+```{bash}
+file abalone.data #to know what type of file is abalone.data
+
+wc abalone.data #to obtain information about: 1) newline count, 2) word count, and 3) byte count, of the abalone.data file.
+
+wc -l abalone.data #to otabin only the number of lines in abalone.data.
+
+head abalone.data #Use head to take a peek at the first lines (10 lines by default) of abalone.data
+
+head -n 5 abalone.data #to display only the first 5 files in abalone.data.
+
+tail abalone.data #Use tail to take a peek at the last lines (10 lines by default) of abalone.data
+
+tail -n 3 abalone.data #to display only the last 3 files in abalone.data.
+
+less abalone.data #this command opens a paginator so you can move up and down the contents of the file.
+```
+
+```{r}
+# reading data from your working directory
+abalone <- read.table("abalone.data", sep = ",")
+
+# take a peek of first rows
+head(abalone)
+
+# take a peek of last rows
+tail(abalone)
+
+# check data frame's structure
+str(abalone,vec.len=1)
+
+# vectors of columns names
+column_names <- c('sex','length', 'diameter','height','whole_weight',
+'shucked_weight','viscera_weight', 'shell_weight','rings')
+
+# vector of data types 
+column_types <- c('character','real','real','real','real','real','real','real','integer')
+column_types
+
+
+abalone <- read.table('abalone.data',col.names = column_names,colClasses = column_types,sep = ",")
+
+# check its structure again
+str(abalone, vec.len = 1)
+
+#read_delim()
+#read_csv()
+#read_tsv()
+#read_csv2()
+#read_fwf()
+#read_table()
+
+# import data with read_csv
+abalone1 <- read_csv(file = 'abalone.data', col_names = column_names, col_types = list(sex = col_factor(c('F', 'I', 'M')),length = col_double(), diameter = col_double(),height = col_double(), whole_weight = col_double(),shucked_weight = col_double(),viscera_weight = col_double(),shell_weight = col_double(), rings = col_integer())) 
+
+abalone1
+
+# import data with read_csv using abbreviated col_types
+abalone2 <- read_csv(file = 'abalone.data', col_names = column_names, col_types = "cdddddddi")
+
+
+
+```
+
